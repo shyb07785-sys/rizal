@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jose Rizal | The Complete Legacy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+        body { background: radial-gradient(circle at center, #2c1b0e 0%, #120a05 70%, #000000 100%); color:#fdf5e6; height:100vh; overflow:hidden; }
+        #particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+
+        header {
+            position:fixed; top:0; left:0; width:100%; z-index:1000;
+            display:flex; justify-content:space-between; align-items:center;
+            padding:20px 80px; background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px); border-bottom: 1px solid rgba(255, 140, 66, 0.1);
+        }
+        .logo { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 24px; color: #ff8c42; }
+        nav a { position: relative; color:#fff; margin-left:25px; text-decoration:none; font-weight:500; font-size: 11px; text-transform: uppercase; transition: 0.4s; opacity: 0.5; padding: 5px 0; }
+        nav a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: #ff8c42; transition: 0.4s; box-shadow: 0 0 10px #ff8c42; }
+        nav a:hover, nav a.active-nav { opacity: 1; color: #ff8c42; }
+        nav a:hover::after, nav a.active-nav::after { width: 100%; }
+
+        section { padding:100px 10%; height:100vh; width: 100%; position:absolute; inset:0; display:none; flex-direction:column; justify-content:center; align-items: center; text-align: center; opacity: 0; z-index: 2; transform: scale(0.9) translateY(20px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        section.active { display:flex; opacity:1; transform: scale(1) translateY(0); }
+
+        .resume-layout { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; text-align: left; }
+        .resume-text { flex: 1; padding-right: 50px; }
+        .resume-image img { width: 300px; height: 400px; object-fit: cover; border-radius: 15px; border: 1px solid rgba(255,140,66,0.3); box-shadow: 20px 20px 0px rgba(255,140,66,0.1); }
+
+        h1 { font-family: 'Playfair Display', serif; font-size: 55px; color: #ff8c42; line-height: 1.1; margin-bottom: 10px; }
+        h2 { font-family: 'Playfair Display', serif; font-size: 38px; color: #ff8c42; margin-bottom: 15px; }
+        .subtitle { color: #ff8c42; letter-spacing: 5px; font-size: 10px; text-transform: uppercase; font-weight: 600; margin-bottom: 5px;}
+        .profession { font-size: 16px; color: #d2b48c; font-weight: 300; margin-bottom: 30px; border-left: 2px solid #ff8c42; padding-left: 15px; }
+
+        .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:15px; width: 100%; max-width: 1200px; margin-top: 15px; overflow-y: auto; padding: 10px; }
+        .box { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(5px); padding:20px; border-radius:12px; border: 1px solid rgba(255, 140, 66, 0.1); transition: .4s; cursor: pointer; text-align: left; }
+        .box:hover { background: rgba(255, 140, 66, 0.12); border-color: #ff8c42; transform: translateY(-5px); }
+
+        .timeline-container { position: relative; max-width: 800px; width: 100%; margin-top: 15px; padding: 10px 0; overflow-y: auto; max-height: 50vh; scrollbar-width: none; }
+        .timeline-container::-webkit-scrollbar { display: none; }
+        .timeline-container::after { content: ''; position: absolute; width: 2px; background: #ff8c42; top: 0; bottom: 0; left: 50%; margin-left: -1px; opacity: 0.3; }
+        .timeline-item { padding: 10px 40px; position: relative; width: 50%; cursor: pointer; }
+        .timeline-item::after { content: ''; position: absolute; width: 12px; height: 12px; right: -6px; background-color: #ff8c42; border: 2px solid #120a05; top: 15px; border-radius: 50%; z-index: 1; }
+        .left { left: 0; text-align: right; }
+        .right { left: 50%; text-align: left; }
+        .right::after { left: -6px; }
+
+        #modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #0d0704; padding: 40px; border-radius: 15px; border: 1px solid #ff8c42; z-index: 2000; width: 90%; max-width: 600px; display: none; text-align: center; max-height: 80vh; overflow-y: auto; }
+        #modal-overlay { position: fixed; inset:0; background: rgba(0,0,0,0.95); z-index: 1999; display: none; }
+        .wiki-btn { display: inline-block; margin-top: 20px; padding: 12px 25px; background: #ff8c42; color: #000; text-decoration: none; border-radius: 5px; font-weight: 600; transition: 0.3s; }
+        .wiki-btn:hover { background: #fff; transform: scale(1.05); }
+
+        .gallery-item { text-align: center; }
+        .gallery-item img { height: 180px; width: 100%; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+        .gallery-caption { font-size: 11px; color: #d2b48c; font-style: italic; line-height: 1.4; }
+
+        @media(max-width:900px){
+            header { padding: 15px 30px; }
+            .resume-layout { flex-direction: column-reverse; text-align: center; }
+            .resume-text { padding-right: 0; margin-top: 30px; }
+            .timeline-container::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 60px; text-align: left; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+    <div class="logo">JOSE P. RIZAL</div>
+    <nav>
+        <a href="javascript:void(0)" onclick="show(0)" class="active-nav">Home</a>
+        <a href="javascript:void(0)" onclick="show(1)">History</a>
+        <a href="javascript:void(0)" onclick="show(2)">Timeline</a>
+        <a href="javascript:void(0)" onclick="show(3)">Travels</a>
+        <a href="javascript:void(0)" onclick="show(4)">Works</a>
+        <a href="javascript:void(0)" onclick="show(5)">Gallery</a>
+    </nav>
+</header>
+
+<div id="modal-overlay" onclick="closeModal()"></div>
+<div id="modal">
+    <h3 id="modal-title" style="margin-bottom: 15px; color:#ff8c42; font-family: 'Playfair Display', serif;"></h3>
+    <p id="modal-desc" style="line-height: 1.6; color: #fdf5e6; text-align: left;"></p>
+    <a id="wiki-link" href="https://en.wikipedia.org/wiki/José_Rizal" target="_blank" class="wiki-btn">Explore Full Wiki</a>
+    <button class="wiki-btn" style="background: rgba(255,255,255,0.1); color: #fff; margin-left: 10px;" onclick="closeModal()">Close</button>
+</div>
+
+<section id="sec-0" class="active">
+    <div class="resume-layout">
+        <div class="resume-text">
+            <span class="subtitle">National Hero of the Philippines</span>
+            <h1>José Protacio Rizal Mercado y Alonso Realonda</h1>
+            <div class="profession">Ophthalmologist | Novelist | Polymath</div>
+            <div id="typing-text" style="font-style: italic; color: #d2b48c; min-height: 4em; font-size: 16px;"></div>
+        </div>
+        <div class="resume-image">
+            <img src="PORTRIZAL.jfif" alt="Jose Rizal Portrait">
+        </div>
+    </div>
+</section>
+
+<section id="sec-1">
+    <span class="subtitle">The Intersection of Life & Era</span>
+    <h2>Historical Context</h2>
+    <div class="grid">
+        <div class="box" onclick="openModal('Family & Roots', 'Born June 19, 1861 in Calamba. Son of Francisco Mercado and Teodora Alonso. He was the 7th of 11 children, with a lineage mixed of Chinese, Japanese, Spanish, and Malay ancestry.')">
+            <strong>Family Life</strong><br>The Principalia Class.
+        </div>
+        <div class="box" onclick="openModal('Academic Brilliance', 'A polymath who excelled at Ateneo (Sobresaliente) and UST. He traveled to Madrid to specialize in Ophthalmology to treat his mother\'s blindness.')">
+            <strong>Education</strong><br>From Manila to Madrid.
+        </div>
+        <div class="box" onclick="openModal('The 19th Century', 'Lived through the opening of the Suez Canal and the execution of Gomburza (1872). He fought the \'Frailocracy\'—the immense power of religious orders.')">
+            <strong>The Era</strong><br>Colonial Shifts & Reform.
+        </div>
+        <div class="box" onclick="openModal('The Propaganda Movement', 'Leading figure of the Ilustrados in Europe. Advocated for equality before the law and Philippine representation in the Spanish parliament.')">
+            <strong>Political Activism</strong><br>The Power of the Pen.
+        </div>
+    </div>
+</section>
+
+<section id="sec-2">
+    <span class="subtitle">Five Chapters of a Legend</span>
+    <h2>Life Timeline</h2>
+    <div class="timeline-container">
+        <div class="timeline-item left" onclick="openModal('Prodigy (1861–1882)', 'Early years in Calamba. Wrote Sa Aking Mga Kabata at 8. Witnessed his mother\'s imprisonment in 1872.')"><h3>Chapter 1</h3><p>The Young Prodigy</p></div>
+        <div class="timeline-item right" onclick="openModal('European Sojourn (1882–1887)', 'Secretly left for Spain. Earned his Licentiate in Medicine. Published Noli Me Tangere in Berlin (1887).')"><h3>Chapter 2</h3><p>The First Journey</p></div>
+        <div class="timeline-item left" onclick="openModal('Dangerous Return (1887–1892)', 'Known as Dr. Uliman in Calamba. Departed again for HK, Japan, and USA. Published El Filibusterismo in Ghent (1891).')"><h3>Chapter 3</h3><p>The Second Trip</p></div>
+        <div class="timeline-item right" onclick="openModal('The Exile (1892–1896)', 'Founded La Liga Filipina. Deported to Dapitan where he spent 4 years as a doctor, teacher, and engineer.')"><h3>Chapter 4</h3><p>Exile in Dapitan</p></div>
+        <div class="timeline-item left" onclick="openModal('Final Sacrifice (1896)', 'Sentenced for sedition. Wrote Mi Último Adiós. Executed Dec 30, 1896 at Bagumbayan.')"><h3>Chapter 5</h3><p>The Martyrdom</p></div>
+    </div>
+</section>
+
+<section id="sec-3">
+    <span class="subtitle">Global Footprints</span>
+    <h2>Travels Abroad</h2>
+    <div class="grid" style="max-height: 55vh;">
+        <div class="box" onclick="openModal('First Journey (1882-1887)', 'Singapore, Sri Lanka, Egypt (Suez Canal), Italy, France, Spain, Germany, Czech Republic (meeting Blumentritt), Austria, and Switzerland.')"><strong>First Trip</strong><br>Europe & The Middle East</div>
+        <div class="box" onclick="openModal('Second Journey (1888-1892)', 'Hong Kong, Macau, Japan (met O-Sei-San), USA (SF to NY by train), UK (British Museum), and Belgium.')"><strong>Second Trip</strong><br>Asia & North America</div>
+        <div class="box" onclick="openModal('US Cross-Country', 'Passed through Nevada, Utah, Colorado, Nebraska, and Illinois via train. Noted the lack of racial equality despite US progress.')"><strong>The American Route</strong><br>1888 Rail Journey</div>
+        <div class="box" onclick="openModal('London Period', 'Spent 10 months annotating Morga\'s Sucesos de las Islas Filipinas to prove Filipinos had a high culture before Spain.')"><strong>British Museum</strong><br>Scholarship in London</div>
+    </div>
+</section>
+
+<section id="sec-4">
+    <span class="subtitle">Literary & Scientific Heritage</span>
+    <h2>The Great Works</h2>
+    <div class="grid">
+        <div class="box" onclick="openModal('The Novels', 'Noli Me Tangere (1887) exposed colonial cancer. El Filibusterismo (1891) explored revolution and revenge.')"><strong>The Novels</strong><br>Social & Political Bibles</div>
+        <div class="box" onclick="openModal('Essays & Poetry', 'The Indolence of the Filipino, The Philippines a Century Hence, and the haunting Mi Último Adiós.')"><strong>Literature</strong><br>Prophecy & Poetics</div>
+        <div class="box" onclick="openModal('Dapitan Discoveries', 'Discovered Draco rizali (lizard) and Apogonia rizali (beetle). Invented a brick-making machine and a Sulpakan lighter.')"><strong>Science & Inventions</strong><br>Dapitan Innovations</div>
+    </div>
+</section>
+
+<section id="sec-5">
+    <span class="subtitle">Visual History</span>
+    <h2>Gallery Archive</h2>
+    <div class="grid">
+        <div class="gallery-item">
+            <img src="RIXALA.jpg" class="box">
+            <p class="gallery-caption">Iconic portrait of Dr. Jose Rizal.</p>
+        </div>
+        <div class="gallery-item">
+            <img src="NOLICUTE.jfif" class="box">
+            <p class="gallery-caption">Original manuscripts of his novels.</p>
+        </div>
+        <div class="gallery-item">
+            <img src="MONUMENTO.jpg" class="box">
+            <p class="gallery-caption">The Rizal Monument at Luneta Park.</p>
+        </div>
+        <div class="gallery-item">
+            <img src="GALA.jpg" class="box">
+            <p class="gallery-caption">Historical markers of his European travels.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+    const quotes = ["\"The youth is the hope of our fatherland.\"", "\"To foretell the destiny of a nation, it is necessary to open the book of its past.\"", "\"It is a useless life that is not consecrated to a great ideal.\"", "\"I wish to show those who deny us Patriotism that we know how to die for our duty.\""];
+    let currentIndex = 0;
+    let isTransitioning = false;
+
+    // Particle System
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    const mouse = { x: null, y: null, radius: 150 };
+    window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1; this.baseX = this.x; this.baseY = this.y;
+            this.density = (Math.random() * 30) + 1;
+        }
+        draw() { ctx.fillStyle = 'rgba(255, 140, 66, 0.4)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        update() {
+            let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+            let dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < mouse.radius) {
+                let force = (mouse.radius - dist) / mouse.radius;
+                this.x += (dx / dist) * force * this.density;
+                this.y += (dy / dist) * force * this.density;
+            } else {
+                this.x -= (this.x - this.baseX) / 10; this.y -= (this.y - this.baseY) / 10;
+            }
+        }
+    }
+    function init() { particlesArray = []; for (let i = 0; i < 150; i++) particlesArray.push(new Particle()); }
+    function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particlesArray.forEach(p => { p.draw(); p.update(); }); requestAnimationFrame(animate); }
+    init(); animate();
+
+    // Navigation logic
+    function typeEffect(text) {
+        const el = document.getElementById('typing-text'); if (!el) return;
+        el.innerHTML = ""; let i = 0;
+        function typing() { if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(typing, 40); } }
+        typing();
+    }
+
+    function show(i) {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        sections.forEach(s => { s.classList.remove('active'); s.style.display = 'none'; });
+        navLinks.forEach(l => l.classList.remove('active-nav'));
+        setTimeout(() => {
+            sections[i].style.display = 'flex';
+            setTimeout(() => sections[i].classList.add('active'), 50);
+            navLinks[i].classList.add('active-nav');
+            if(i === 0) typeEffect(quotes[Math.floor(Math.random()*quotes.length)]);
+            currentIndex = i; isTransitioning = false;
+        }, 50);
+    }
+
+    function openModal(title, desc) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-desc').innerText = desc;
+        document.getElementById('modal').style.display = 'block';
+        document.getElementById('modal-overlay').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+        document.getElementById('modal-overlay').style.display = 'none';
+    }
+
+    window.addEventListener('wheel', (e) => {
+        if(document.getElementById('modal').style.display === 'block' || isTransitioning) return;
+        show(e.deltaY > 0 ? (currentIndex + 1) % sections.length : (currentIndex - 1 + sections.length) % sections.length);
+    }, { passive: true });
+
+    window.onload = () => show(0);
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; init(); });
+</script>
+
+</body>
+</html>
